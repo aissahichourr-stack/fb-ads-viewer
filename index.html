@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الإعلانات - Spy Ads Viewer</title>
+    <title>مكتبة الإعلانات المتقدمة - Facebook Ads Viewer</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -13,7 +13,7 @@
             min-height: 100vh;
         }
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             margin: 0 auto;
             background: white;
             border-radius: 15px;
@@ -31,79 +31,61 @@
             margin-bottom: 10px;
             font-weight: 700;
         }
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            padding: 25px;
             background: #f8f9fa;
             border-bottom: 1px solid #e0e0e0;
         }
         .stat-card {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             text-align: center;
             border-left: 4px solid #667eea;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
         .stat-card .number {
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: 700;
             color: #667eea;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         .stat-card .label {
             color: #666;
-            font-size: 0.9em;
+            font-size: 0.85em;
         }
         .controls {
-            padding: 30px;
+            padding: 20px;
             background: white;
             display: flex;
-            gap: 15px;
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
             border-bottom: 1px solid #e0e0e0;
         }
-        .search-box {
-            flex: 1;
-            min-width: 250px;
-            padding: 12px 15px;
+        .search-box, .filter-select {
+            padding: 10px 12px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 1em;
+            font-size: 0.95em;
             transition: border-color 0.3s;
         }
-        .search-box:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        .filter-select {
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 1em;
-            transition: border-color 0.3s;
-        }
-        .filter-select:focus {
+        .search-box:focus, .filter-select:focus {
             outline: none;
             border-color: #667eea;
         }
         .sort-btn {
-            padding: 12px 20px;
+            padding: 10px 15px;
             background: #667eea;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
+            font-size: 0.9em;
             transition: background 0.3s;
         }
         .sort-btn:hover {
@@ -111,18 +93,19 @@
         }
         .table-wrapper {
             overflow-x: auto;
-            padding: 30px;
+            padding: 20px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
+            font-size: 0.9em;
         }
         table thead {
             background: #f8f9fa;
             border-bottom: 2px solid #667eea;
         }
         table th {
-            padding: 15px;
+            padding: 12px;
             text-align: right;
             font-weight: 700;
             color: #333;
@@ -133,7 +116,7 @@
             background: #e8e9fa;
         }
         table td {
-            padding: 15px;
+            padding: 12px;
             border-bottom: 1px solid #e0e0e0;
         }
         table tr:hover {
@@ -145,24 +128,28 @@
         }
         .ad-text {
             color: #666;
-            font-size: 0.9em;
-            max-width: 300px;
+            max-width: 200px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
-        .date {
-            color: #999;
-            font-size: 0.9em;
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e8e9fa;
+            color: #667eea;
+            border-radius: 5px;
+            font-size: 0.85em;
+            font-weight: 600;
         }
         .view-btn {
             display: inline-block;
-            padding: 8px 15px;
+            padding: 6px 12px;
             background: #667eea;
             color: white;
             text-decoration: none;
             border-radius: 5px;
-            font-size: 0.85em;
+            font-size: 0.8em;
             transition: background 0.3s;
         }
         .view-btn:hover {
@@ -179,9 +166,9 @@
     <div class="container">
         <div class="header">
             <h1>👁️ مكتبة الإعلانات الرابحة</h1>
-            <p>اكتشف أفضل إعلانات منافسيك من Facebook</p>
+            <p>اكتشف أفضل إعلانات منافسيك من Facebook مع بيانات شاملة</p>
         </div>
-        
+
         <div class="stats">
             <div class="stat-card">
                 <div class="number" id="totalAds">0</div>
@@ -192,39 +179,44 @@
                 <div class="label">عدد المتاجر</div>
             </div>
             <div class="stat-card">
+                <div class="number" id="totalProducts">0</div>
+                <div class="label">المنتجات</div>
+            </div>
+            <div class="stat-card">
                 <div class="number" id="totalCategories">0</div>
                 <div class="label">التصنيفات</div>
             </div>
         </div>
-        
+
         <div class="controls">
-            <input type="text" class="search-box" id="searchInput" placeholder="البحث عن منتج أو متجر...">
+            <input type="text" class="search-box" id="searchInput" placeholder="ابحث عن منتج أو متجر..." style="flex: 1; min-width: 200px;">
             <select class="filter-select" id="countryFilter">
                 <option value="">كل الدول</option>
                 <option value="MA">المغرب 🇲🇦</option>
                 <option value="DZ">الجزائر 🇩🇿</option>
                 <option value="TN">تونس 🇹🇳</option>
             </select>
-            <button class="sort-btn" onclick="sortTable('date')">ترتيب حسب التاريخ</button>
-            <button class="sort-btn" onclick="sortTable('name')">ترتيب حسب الاسم</button>
+            <button class="sort-btn" onclick="sortTable('date')">ترتيب: التاريخ</button>
+            <button class="sort-btn" onclick="sortTable('repetitions')">ترتيب: التكرارات</button>
         </div>
-        
+
         <div class="table-wrapper">
             <table id="adsTable">
                 <thead>
                     <tr>
+                        <th>المنتج 📦</th>
                         <th>المتجر 🏪</th>
-                        <th>اسم الإعلان</th>
+                        <th>أيام التشغيل ⏰</th>
+                        <th>التكرارات 🔄</th>
+                        <th>التصنيف 🏷️</th>
                         <th>نص الإعلان</th>
                         <th>التاريخ 📅</th>
-                        <th>الدولة 🌍</th>
-                        <th>إجراء</th>
+                        <th>الإجراء</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
-            <div class="empty" id="emptyMessage" style="display:none;">لا توجد نتائج</div>
+            <div class="empty" id="emptyMessage" style="display:none;">لا توجد نتائج 📭</div>
         </div>
     </div>
 
@@ -250,15 +242,14 @@
             const stores = new Set(allAds.map(ad => ad.page_name).filter(Boolean));
             document.getElementById('totalStores').textContent = stores.size;
             
-            const categories = new Set();
-            allAds.forEach(ad => {
-                if (ad.message) categories.add('عام');
-            });
-            document.getElementById('totalCategories').textContent = Math.max(1, categories.size);
+            const products = new Set(allAds.map(ad => ad.product_name).filter(Boolean));
+            document.getElementById('totalProducts').textContent = products.size;
+            
+            const categories = new Set(allAds.map(ad => ad.category).filter(Boolean));
+            document.getElementById('totalCategories').textContent = categories.size || 0;
         }
 
-        function renderTable
-            () {
+        function renderTable() {
             const tbody = document.getElementById('tableBody');
             const emptyMsg = document.getElementById('emptyMessage');
             
@@ -271,12 +262,15 @@
             emptyMsg.style.display = 'none';
             tbody.innerHTML = filteredAds.map(ad => `
                 <tr>
-<td><span class="store-name">${escapeHtml((ad.page_name || ad.publisherName || 'غير معروف').substring(0, 30))}</span></td>
-                    <td>${escapeHtml((ad.message || 'بدون عنوان').substring(0, 30))}...</td>
-                    <td><span class="ad-text">${escapeHtml((ad.message || 'بدون نص').substring(0, 100))}</span></td>
-                    <td><span class="date">${formatDate(ad.start_date || ad.createdTime)}</span></td>
-                    <td>🌍</td>
-                    <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض</a></td>                </tr>
+                    <td><span class="badge">${escapeHtml(ad.product_name || 'بدون منتج')}</span></td>
+                    <td><span class="store-name">${escapeHtml((ad.page_name || 'غير معروف').substring(0, 25))}</span></td>
+                    <td><strong>${ad.operating_days || '-'}</strong></td>
+                    <td><strong>${ad.repetitions || '-'}</strong>x</td>
+                    <td>${escapeHtml(ad.category || 'عام')}</td>
+                    <td><span class="ad-text">${escapeHtml((ad.message || 'بدون نص').substring(0, 80))}</span></td>
+                    <td>${formatDate(ad.start_date || ad.createdTime)}</td>
+                    <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض</a></td>
+                </tr>
             `).join('');
         }
 
@@ -287,33 +281,48 @@
         }
 
         function formatDate(dateString) {
-            if (!dateString) return 'غير معروف';
+            if (!dateString) return '-';
             try {
                 const date = new Date(dateString);
                 return date.toLocaleDateString('ar-SA');
             } catch {
-                return 'غير معروف';
+                return '-';
             }
         }
 
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
             const search = e.target.value.toLowerCase();
+            const country = document.getElementById('countryFilter').value;
+            
             filteredAds = allAds.filter(ad => {
-                const text = (ad.message + ' ' + ad.page_name).toLowerCase();
-                return text.includes(search);
+                const text = (ad.product_name + ' ' + ad.page_name + ' ' + ad.message).toLowerCase();
+                const matchesSearch = text.includes(search);
+                const matchesCountry = !country || ad.country === country;
+                return matchesSearch && matchesCountry;
             });
-            renderTable
-                              ();
+            renderTable();
+        });
+
+        document.getElementById('countryFilter').addEventListener('change', function() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const country = this.value;
+            
+            filteredAds = allAds.filter(ad => {
+                const text = (ad.product_name + ' ' + ad.page_name + ' ' + ad.message).toLowerCase();
+                const matchesSearch = text.includes(search);
+                const matchesCountry = !country || ad.country === country;
+                return matchesSearch && matchesCountry;
+            });
+            renderTable();
         });
 
         function sortTable(type) {
             if (type === 'date') {
                 filteredAds.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
-            } else if (type === 'name') {
-                filteredAds.sort((a, b) => (a.page_name || '').localeCompare(b.page_name || ''));
+            } else if (type === 'repetitions') {
+                filteredAds.sort((a, b) => (b.repetitions || 0) - (a.repetitions || 0));
             }
-            renderTable
-                ();
+            renderTable();
         }
 
         loadAds();
