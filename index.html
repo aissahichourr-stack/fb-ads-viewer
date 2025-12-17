@@ -3,38 +3,318 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكتبة الإعلانات الخاصة</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>مكتبة الإعلانات - Spy Ads Viewer</title>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; }
-        .ad-card { transition: transform 0.2s; }
-        .ad-card:hover { transform: translateY(-5px); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .stat-card .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .controls {
+            padding: 30px;
+            background: white;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        .search-box:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .filter-select {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .sort-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        .sort-btn:hover {
+            background: #764ba2;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            padding: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #667eea;
+        }
+        table th {
+            padding: 15px;
+            text-align: right;
+            font-weight: 700;
+            color: #333;
+            cursor: pointer;
+            user-select: none;
+        }
+        table th:hover {
+            background: #e8e9fa;
+        }
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        table tr:hover {
+            background: #f8f9fa;
+        }
+        .store-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        .ad-text {
+            color: #666;
+            font-size: 0.9em;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .date {
+            color: #999;
+            font-size: 0.9em;
+        }
+        .view-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.85em;
+            transition: background 0.3s;
+        }
+        .view-btn:hover {
+            background: #764ba2;
+        }
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
     </style>
 </head>
-<body class="p-6">
-    <div class="max-w-6xl mx-auto">
-        <header class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-blue-500 mb-2">Spy Ads Viewer</h1>
-            <p class="text-gray-400">تصفح الإعلانات الرابحة بسهولة</p>
-        </header>
-
-        <!-- Search & Filter -->
-        <div class="bg-slate-800 p-4 rounded-lg mb-8 flex flex-col md:flex-row gap-4">
-            <input type="text" id="searchInput" placeholder="بحث بكلمة مفتاحية..." class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:outline-none focus:border-blue-500">
-            <select id="countryFilter" class="p-2 rounded bg-slate-700 border border-slate-600">
-                <option value="all">كل الدول</option>
-                <!-- الدول ستضاف هنا تلقائياً -->
-            </select>
-            <div class="text-slate-400 self-center" id="countDisplay">0 إعلان</div>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👁️ مكتبة الإعلانات الرابحة</h1>
+            <p>اكتشف أفضل إعلانات منافسيك من Facebook</p>
         </div>
-
-        <!-- Ads Grid -->
-        <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- الإعلانات تظهر هنا -->
-            <p class="text-center col-span-3 text-gray-500">جاري تحميل الإعلانات...</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number" id="totalAds">0</div>
+                <div class="label">إجمالي الإعلانات</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="totalStores">0</div>
+                <div class="label">عدد المتاجر</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="totalCategories">0</div>
+                <div class="label">التصنيفات</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <input type="text" class="search-box" id="searchInput" placeholder="البحث عن منتج أو متجر...">
+            <select class="filter-select" id="countryFilter">
+                <option value="">كل الدول</option>
+                <option value="MA">المغرب 🇲🇦</option>
+                <option value="DZ">الجزائر 🇩🇿</option>
+                <option value="TN">تونس 🇹🇳</option>
+            </select>
+            <button class="sort-btn" onclick="sortTable('date')">ترتيب حسب التاريخ</button>
+            <button class="sort-btn" onclick="sortTable('name')">ترتيب حسب الاسم</button>
+        </div>
+        
+        <div class="table-wrapper">
+            <table id="adsTable">
+                <thead>
+                    <tr>
+                        <th>المتجر 🏪</th>
+                        <th>اسم الإعلان</th>
+                        <th>نص الإعلان</th>
+                        <th>التاريخ 📅</th>
+                        <th>الدولة 🌍</th>
+                        <th>إجراء</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                </tbody>
+            </table>
+            <div class="empty" id="emptyMessage" style="display:none;">لا توجد نتائج</div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let allAds = [];
+        let filteredAds = [];
+
+        async function loadAds() {
+            try {
+                const response = await fetch('ads.json');
+                allAds = await response.json();
+                filteredAds = [...allAds];
+                updateStats();
+                renderTable();
+            } catch (error) {
+                console.error('خطأ في تحميل البيانات:', error);
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('totalAds').textContent = allAds.length;
+            
+            const stores = new Set(allAds.map(ad => ad.pageName).filter(Boolean));
+            document.getElementById('totalStores').textContent = stores.size;
+            
+            const categories = new Set();
+            allAds.forEach(ad => {
+                if (ad.adBody) categories.add('عام');
+            });
+            document.getElementById('totalCategories').textContent = Math.max(1, categories.size);
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('tableBody');
+            const emptyMsg = document.getElementById('emptyMessage');
+            
+            if (filteredAds.length === 0) {
+                tbody.innerHTML = '';
+                emptyMsg.style.display = 'block';
+                return;
+            }
+            
+            emptyMsg.style.display = 'none';
+            tbody.innerHTML = filteredAds.map(ad => `
+                <tr>
+                    <td><span class="store-name">${escapeHtml(ad.pageName || 'غير معروف')}</span></td>
+                    <td>${escapeHtml((ad.adBody || '').substring(0, 50))}...</td>
+                    <td><span class="ad-text">${escapeHtml(ad.adBody || 'بدون نص')}</span></td>
+                    <td><span class="date">${formatDate(ad.startDate)}</span></td>
+                    <td>🌍</td>
+                    <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض الإعلان</a></td>
+                </tr>
+            `).join('');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'غير معروف';
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('ar-SA');
+            } catch {
+                return 'غير معروف';
+            }
+        }
+
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            const search = e.target.value.toLowerCase();
+            filteredAds = allAds.filter(ad => {
+                const text = (ad.adBody + ' ' + ad.pageName).toLowerCase();
+                return text.includes(search);
+            });
+            renderTable();
+        });
+
+        function sortTable(type) {
+            if (type === 'date') {
+                filteredAds.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+            } else if (type === 'name') {
+                filteredAds.sort((a, b) => (a.pageName || '').localeCompare(b.pageName || ''));
+            }
+            renderTable();
+        }
+
+        loadAds();
+    </script>
 </body>
 </html>
