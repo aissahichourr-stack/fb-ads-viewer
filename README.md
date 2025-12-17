@@ -162,3 +162,57 @@ For issues or questions:
 ---
 
 **Made with ❤️ for e-commerce entrepreneurs in Africa**
+
+
+## 📊 ✨ Recent Updates (December 2025)
+
+### New Table Columns Added
+The app now includes comprehensive product analytics:
+
+| Column | Description |
+|--------|-------------|
+| **المنتج (Product)** | Product name/identifier |
+| **أيام التشغيل (Operating Days)** | Number of days the ad has been running |
+| **التكرارات (Repetitions)** | How many times the ad has been displayed |
+| **التصنيف (Category)** | Product category for better organization |
+
+### Enhanced Features
+
+✅ **Product Statistics** - Track total products in the database  
+✅ **Sorting by Repetitions** - Sort ads by number of repetitions to find winners  
+✅ **Improved Data Structure** - Better JSON format with all required fields  
+✅ **Country Filtering** - Enhanced filtering for Morocco 🇲🇦, Algeria 🇩🇿, Tunisia 🇹🇳  
+✅ **Responsive Table** - Better mobile-friendly layout  
+
+### Sample Data Structure
+
+```json
+{
+  "page_name": "Store Name",
+  "product_name": "Product Name",
+  "message": "Ad text content",
+  "operating_days": 100,
+  "repetitions": 5,
+  "category": "Product Category",
+  "start_date": "2024-08-15",
+  "country": "MA"
+}
+```
+
+### Use Cases for E-commerce Entrepreneurs
+
+🎯 **Find Trending Products** - Identify products with high operating days and repetitions  
+💡 **Analyze Competitor Strategy** - See which products get the most ad spend  
+📍 **Market Research** - Compare product performance across different countries  
+💰 **ROI Optimization** - Track which product ads run the longest (indicating success)  
+
+### How to Use New Features
+
+1. **Sort by Repetitions** - Click "ترتيب: التكرارات" to see most-promoted products
+2. **Filter by Category** - Use category column to focus on specific product types
+3. **Check Operating Days** - Longer running ads indicate proven winning products
+4. **Analyze Stores** - See which stores are actively promoting which products
+
+---
+
+**Note:** This tool is specifically enhanced for e-commerce research in North African markets.
