@@ -247,12 +247,12 @@
         function updateStats() {
             document.getElementById('totalAds').textContent = allAds.length;
             
-            const stores = new Set(allAds.map(ad => ad.pageName).filter(Boolean));
+            const stores = new Set(allAds.map(ad => ad.page_name).filter(Boolean));
             document.getElementById('totalStores').textContent = stores.size;
             
             const categories = new Set();
             allAds.forEach(ad => {
-                if (ad.adBody) categories.add('عام');
+                if (ad.message) categories.add('عام');
             });
             document.getElementById('totalCategories').textContent = Math.max(1, categories.size);
         }
@@ -271,10 +271,10 @@
             emptyMsg.style.display = 'none';
             tbody.innerHTML = filteredAds.map(ad => `
                 <tr>
-<td><span class="store-name">${escapeHtml((ad.pageName || ad.publisherName || 'غير معروف').substring(0, 30))}</span></td>
-                    <td>${escapeHtml((ad.adBody || 'بدون عنوان').substring(0, 30))}...</td>
-                    <td><span class="ad-text">${escapeHtml((ad.adBody || 'بدون نص').substring(0, 100))}</span></td>
-                    <td><span class="date">${formatDate(ad.startDate || ad.createdTime)}</span></td>
+<td><span class="store-name">${escapeHtml((ad.page_name || ad.publisherName || 'غير معروف').substring(0, 30))}</span></td>
+                    <td>${escapeHtml((ad.message || 'بدون عنوان').substring(0, 30))}...</td>
+                    <td><span class="ad-text">${escapeHtml((ad.message || 'بدون نص').substring(0, 100))}</span></td>
+                    <td><span class="date">${formatDate(ad.start_date || ad.createdTime)}</span></td>
                     <td>🌍</td>
                     <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض</a></td>                </tr>
             `).join('');
@@ -299,7 +299,7 @@
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
             const search = e.target.value.toLowerCase();
             filteredAds = allAds.filter(ad => {
-                const text = (ad.adBody + ' ' + ad.pageName).toLowerCase();
+                const text = (ad.message + ' ' + ad.page_name).toLowerCase();
                 return text.includes(search);
             });
             260
@@ -308,9 +308,9 @@
 
         function sortTable(type) {
             if (type === 'date') {
-                filteredAds.sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+                filteredAds.sort((a, b) => new Date(b.start_date) - new Date(a.start_date));
             } else if (type === 'name') {
-                filteredAds.sort((a, b) => (a.pageName || '').localeCompare(b.pageName || ''));
+                filteredAds.sort((a, b) => (a.page_name || '').localeCompare(b.page_name || ''));
             }
             265
                 ();
