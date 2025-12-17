@@ -1,12 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>FB Ads Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة الإعلانات الخاصة</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; font-family: sans-serif; }
+        .ad-card { transition: transform 0.2s; }
+        .ad-card:hover { transform: translateY(-5px); }
+    </style>
 </head>
-<body>
-  <h1>FB Ads Viewer – Test</h1>
-  <p>إذا تشوف هاد النص، GitHub Pages راهي خدامة.</p>
-  <script src="script.js"></script>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-bold text-blue-500 mb-2">Spy Ads Viewer</h1>
+            <p class="text-gray-400">تصفح الإعلانات الرابحة بسهولة</p>
+        </header>
+
+        <!-- Search & Filter -->
+        <div class="bg-slate-800 p-4 rounded-lg mb-8 flex flex-col md:flex-row gap-4">
+            <input type="text" id="searchInput" placeholder="بحث بكلمة مفتاحية..." class="w-full p-2 rounded bg-slate-700 border border-slate-600 focus:outline-none focus:border-blue-500">
+            <select id="countryFilter" class="p-2 rounded bg-slate-700 border border-slate-600">
+                <option value="all">كل الدول</option>
+                <!-- الدول ستضاف هنا تلقائياً -->
+            </select>
+            <div class="text-slate-400 self-center" id="countDisplay">0 إعلان</div>
+        </div>
+
+        <!-- Ads Grid -->
+        <div id="adsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- الإعلانات تظهر هنا -->
+            <p class="text-center col-span-3 text-gray-500">جاري تحميل الإعلانات...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
