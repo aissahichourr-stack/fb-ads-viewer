@@ -12,21 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
       return response.json();
     })
     .then(data => {
-      // معالجة اختلاف هيكلة Apify (أحيانا تكون array مباشرة وأحيانا داخل object)
-      allAds = Array.isArray(data) ? data : (data.results || []); // تعديل حسب نوع السكرايبر
-      
-      // استخراج الدول للملء الفلتر
+      allAds = Array.isArray(data) ? data : (data.results || []);
       populateCountries(allAds);
-      
-      // عرض الإعلانات
       renderAds(allAds);
     })
     .catch(err => {
       console.error('Error:', err);
-      container.innerHTML = `<p class="text-red-500 text-center col-span-3">خطأ: تأكد من رفع ملف ads.json في نفس المجلد.<br>(${err.message})</p>`;
+      container.innerHTML = `<p class="text-red-500 text-center col-span-3">خطأ: ${err.message}</p>`;
     });
 
-  // دالة العرض
   function renderAds(ads) {
     container.innerHTML = '';
     countDisplay.textContent = `${ads.length} إعلان`;
@@ -37,39 +31,45 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     ads.forEach(ad => {
-      // محاولة استخراج البيانات من حقول مختلفة حسب السكرايبر
-      const pageName = String(ad.pageName || ad.page_name || 'صفحة غير معروفة');
-      const bodyText = String(ad.adBody || ad.ad_creative_body || ad.text || 'بدون نص');
-      const link = ad.adSnapshotUrl || ad.ad_snapshot_url || '#';
-      const startDate = ad.startDate || ad.ad_delivery_start_time || '';
-      const platform = Array.isArray(ad.publisherPlatforms) 
-        ? ad.publisherPlatforms.join(', ') 
-        : (ad.publisherPlatforms || 'Facebook');
+      // استخراج بيانات من Apify
+      const snapshot = ad.snapshot || {};
+      const pageName = String(snapshot.page_name || ad.pageName || 'صفحة غير معروفة');
+      const adBody = String(snapshot.body || ad.adBody || "بدون نص");
+      const pageProfilePicture = snapshot.page_profile_picture_url || ad.image || '';
+      const pageProfileUri = snapshot.page_profile_uri || ad.link || '#';
+      const adLibraryUrl = ad.ad_library_url || '#';
       
-      // إنشاء الكارت
+      // استخراج التاريخ
+      let displayDate = 'غير معروف';
+      if (ad.creation_date) {
+        displayDate = new Date(ad.creation_date).toLocaleDateString('ar-DZ');
+      } else if (snapshot.creation_date) {
+        displayDate = new Date(snapshot.creation_date).toLocaleDateString('ar-DZ');
+      }
+      
       const card = document.createElement('div');
       card.className = 'ad-card bg-slate-800 rounded-xl overflow-hidden shadow-lg border border-slate-700 flex flex-col';
       
-      // تحضير نص الإعلان بشكل آمن
-      const displayText = bodyText.length > 200 
-        ? bodyText.substring(0, 200) + '...' 
-        : bodyText;
+      const displayText = adBody.length > 150 ? adBody.substring(0, 150) + '...' : adBody;
       
-      // تحضير التاريخ بشكل آمن
-      const displayDate = startDate ? startDate.split('T')[0] : 'غير معروف';
-      
+      // بناء الكارت
       card.innerHTML = `
         <div class="p-4 flex-1">
+          ${pageProfilePicture ? `<img src="${escapeHtml(pageProfilePicture)}" alt="${escapeHtml(pageName)}" class="w-full h-40 object-cover rounded-lg mb-3" onerror="this.style.display='none'">` : ''}
           <div class="flex justify-between items-start mb-3">
-            <h3 class="font-bold text-lg text-white">${escapeHtml(pageName)}</h3>
-            <span class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">${escapeHtml(platform)}</span>
+            <h3 class="font-bold text-lg text-white flex-1">${escapeHtml(pageName)}</h3>
+            <span class="text-xs bg-blue-900 text-blue-200 px-2 py-1 rounded">Facebook</span>
           </div>
-          <p class="text-slate-300 text-sm mb-4 line-clamp-6">${escapeHtml(displayText)}</p>
-          <div class="text-xs text-slate-500 mb-2">تاريخ البدء: ${escapeHtml(displayDate)}</div>
+          <p class="text-slate-300 text-sm mb-3 line-clamp-5">${escapeHtml(displayText)}</p>
+          <div class="text-xs text-slate-400 mb-2">📅 ${displayDate}</div>
+          <div class="text-xs text-slate-500">ID: ${escapeHtml(String(ad.ad_archive_id || ad.id || 'N/A').substring(0, 12))}...</div>
         </div>
-        <div class="p-4 bg-slate-900 border-t border-slate-700">
-          <a href="${escapeHtml(String(link))}" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition">
-            👁 مشاهدة الإعلان الأصلي
+        <div class="p-4 bg-slate-900 border-t border-slate-700 flex gap-2">
+          <a href="${escapeHtml(String(adLibraryUrl))}" target="_blank" class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded transition text-sm">
+            👁 مشاهدة أصلي
+          </a>
+          <a href="${escapeHtml(String(pageProfileUri))}" target="_blank" class="flex-1 text-center bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-3 rounded transition text-sm">
+            📋 الصفحة
           </a>
         </div>
       `;
@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // دالة آمنة لتجنب XSS
   function escapeHtml(text) {
     const map = {
       '&': '&amp;',
@@ -90,17 +89,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function populateCountries(ads) {
-    // هذه تعتمد على وجود حقل الدولة، سنتركها بسيطة الآن
-    // يمكن تحسينها لاحقاً
+    // متروك للمستقبل
   }
 
-  // البحث المباشر
   searchInput.addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     const filtered = allAds.filter(ad => {
-      const text = String(ad.adBody || ad.ad_creative_body || '').toLowerCase();
-      const page = String(ad.pageName || ad.page_name || '').toLowerCase();
-      return text.includes(term) || page.includes(term);
+      const snapshot = ad.snapshot || {};
+      const body = String(snapshot.body || ad.adBody || '').toLowerCase();
+      const page = String(snapshot.page_name || ad.pageName || '').toLowerCase();
+      return body.includes(term) || page.includes(term);
     });
     renderAds(filtered);
   });
