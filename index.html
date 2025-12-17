@@ -257,7 +257,7 @@
             document.getElementById('totalCategories').textContent = Math.max(1, categories.size);
         }
 
-        function 250
+        function renderTable
             () {
             const tbody = document.getElementById('tableBody');
             const emptyMsg = document.getElementById('emptyMessage');
@@ -302,7 +302,7 @@
                 const text = (ad.message + ' ' + ad.page_name).toLowerCase();
                 return text.includes(search);
             });
-            260
+            renderTable
                               ();
         });
 
@@ -312,7 +312,7 @@
             } else if (type === 'name') {
                 filteredAds.sort((a, b) => (a.page_name || '').localeCompare(b.page_name || ''));
             }
-            265
+            renderTable
                 ();
         }
 
