@@ -257,7 +257,8 @@
             document.getElementById('totalCategories').textContent = Math.max(1, categories.size);
         }
 
-        function renderTable() {
+        function 250
+            () {
             const tbody = document.getElementById('tableBody');
             const emptyMsg = document.getElementById('emptyMessage');
             
@@ -270,13 +271,12 @@
             emptyMsg.style.display = 'none';
             tbody.innerHTML = filteredAds.map(ad => `
                 <tr>
-                    <td><span class="store-name">${escapeHtml(ad.pageName || 'غير معروف')}</span></td>
-                    <td>${escapeHtml((ad.adBody || '').substring(0, 50))}...</td>
-                    <td><span class="ad-text">${escapeHtml(ad.adBody || 'بدون نص')}</span></td>
-                    <td><span class="date">${formatDate(ad.startDate)}</span></td>
+<td><span class="store-name">${escapeHtml((ad.pageName || ad.publisherName || 'غير معروف').substring(0, 30))}</span></td>
+                    <td>${escapeHtml((ad.adBody || 'بدون عنوان').substring(0, 30))}...</td>
+                    <td><span class="ad-text">${escapeHtml((ad.adBody || 'بدون نص').substring(0, 100))}</span></td>
+                    <td><span class="date">${formatDate(ad.startDate || ad.createdTime)}</span></td>
                     <td>🌍</td>
-                    <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض الإعلان</a></td>
-                </tr>
+                    <td><a href="${ad.adSnapshotUrl || '#'}" target="_blank" class="view-btn">عرض</a></td>                </tr>
             `).join('');
         }
 
@@ -302,7 +302,8 @@
                 const text = (ad.adBody + ' ' + ad.pageName).toLowerCase();
                 return text.includes(search);
             });
-            renderTable();
+            260
+                              ();
         });
 
         function sortTable(type) {
@@ -311,7 +312,8 @@
             } else if (type === 'name') {
                 filteredAds.sort((a, b) => (a.pageName || '').localeCompare(b.pageName || ''));
             }
-            renderTable();
+            265
+                ();
         }
 
         loadAds();
