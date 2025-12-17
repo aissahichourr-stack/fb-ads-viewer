@@ -2,47 +2,55 @@ name: Update Ads Daily
 
 on:
   schedule:
-    - cron: '0 8 * * *' # يخدم كل يوم 8 صباحاً بتوقيت غرينتش
-  workflow_dispatch: # يسمحلك تشغله يدوياً متى شئت
+    # يخدم كل يوم الساعة 8 صباحاً بتوقيت GMT
+    - cron: '0 8 * * *'
+  workflow_dispatch: # يسمحك بتشغيله يدوياً متى شئت
 
 jobs:
   update-ads:
     runs-on: ubuntu-latest
+    
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
       - name: Run Apify Scraper & Download JSON
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-          # استبدل هذا بالرابط اللي نسختو من Apify (start URL) باش يكون مرجع
-          # أو الأفضل: نحطو كود يشغل الـ Actor مباشرة عبر API
         run: |
-          # 1. تشغيل الـ Actor (هنا نستعملو curl باش نكلمو Apify API)
-          # ملاحظة: لازم تجيب actorId تاع Facebook Ads Scraper اللي تستعملو
-          # وتجيب input configuration (JSON body)
-          
-          # للأمان والسهولة، سنقوم بخطوة أبسط:
-          # نعتبر أنك درت Schedule في Apify باش يخدم وحده، وحنا هنا نجيبو غير آخر Dataset
-          
-          # هل درت Schedule في Apify؟ (إذا لا، ماعليش، نقدرو نتحكمو من هنا)
-          echo "Starting update..."
-
-      - name: Fetch Latest Data from Apify
-        # هنا نحتاجو معرف الـ Actor أو Dataset.
-        # الأسهل: روح لـ Apify -> Actor -> API -> Run (POST) وانسخ الرابط
-        # لكن بما أننا مازال ما ضبطناش الـ Actor ID، 
-        # غادي نعطيك كود JS بسيط (Node.js) يحطو GitHub ويشغلو.
-        run: |
-          npm install apify-client
+          echo "Starting Apify Actor update..."
           node update_script.js
-        env:
-          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
-
+          
+      - name: Verify ads.json was created
+        run: |
+          if [ -f ads.json ]; then
+            echo "ads.json created successfully"
+            echo "File size: $(wc -c < ads.json) bytes"
+          else
+            echo "ERROR: ads.json was not created"
+            exit 1
+          fi
+          
       - name: Commit and Push changes
         run: |
           git config --global user.name 'GitHub Action'
           git config --global user.email 'action@github.com'
           git add ads.json
-          git commit -m "Auto-update ads data" || echo "No changes to commit"
-          git push
+          if git diff --cached --exit-code; then
+            echo "No changes to commit"
+          else
+            git commit -m "Auto-update ads data $(date '+%Y-%m-%d %H:%M:%S')"
+            git push
+          fi
+          
+      - name: Notify on failure
+        if: failure()
+        run: echo "Workflow failed - check logs"
