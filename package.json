@@ -1,0 +1,9 @@
+{
+  "name": "ads-updater",
+  "version": "1.0.0",
+  "description": "Auto update ads",
+  "main": "update_script.js",
+  "dependencies": {
+    "apify-client": "^2.9.0"
+  }
+}
