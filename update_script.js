@@ -1,44 +1,70 @@
 const { ApifyClient } = require('apify-client');
 const fs = require('fs');
 
-// 1. إعداد العميل باستخدام التوكن من الـ Secrets
+// إعداد العميل باستخدام التوكن من الـ Secrets
 const client = new ApifyClient({
-    token: process.env.APIFY_TOKEN,
+  token: process.env.APIFY_TOKEN,
 });
 
 async function main() {
-    console.log("Starting Apify Actor...");
-
-    // 2. تشغيل الـ Actor (استبدل هذا بـ Actor ID الخاص بك)
-    // مثلاً: 'curious_coder/facebook-ads-library-scraper'
-    // أو 'apify/facebook-ads-scraper'
-    // لازم تتأكد من الإسم الصحيح اللي راك تستخدمو
-    const actorId = 'curious_coder/facebook-ads-library-scraper'; 
-
-    // 3. إعداد المدخلات (Input) - نفس اللي درتها في Apify Console
+  try {
+    console.log('Starting Apify Actor...');
+    
+    // التحقق من التوكن
+    if (!process.env.APIFY_TOKEN) {
+      throw new Error('APIFY_TOKEN environment variable is not set');
+    }
+    
+    // Actor ID - تأكد من استخدام Actor ID الصحيح
+    // الخيارات الشهيرة:
+    // - 'curious_coder/facebook-ads-library-scraper'
+    // - 'apify/facebook-ads-scraper'
+    const actorId = 'curious_coder/facebook-ads-library-scraper';
+    
+    // إعداد المدخلات - نفس اللي درتها في Apify Console
     const input = {
-        "startUrls": [
-            { "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=DZ&q=serum&sort_data[direction]=desc&sort_data[mode]=relevancy_monthly_grouped&search_type=keyword_unordered&media_type=all" }
-        ],
-        "resultsLimit": 200, // عدد الإعلانات
-        "countryCode": "DZ", // كود الدولة (اختياري حسب السكرايبر)
+      "startUrls": [
+        {
+          "url": "https://www.facebook.com/ads/library/?active_status=all&ad_type=all&country=DZ&q=serum&sort_data[direction]=desc&sort_data[mode]=relevancy_monthly_grouped&search_type=keyword_unordered&media_type=all"
+        }
+      ],
+      "resultsLimit": 200,
+      "countryCode": "DZ",
     };
-
-    // 4. تشغيل المهمة وانتظار النهاية
-    console.log("Running actor...");
-    const run = await client.actor(actorId).call(input);
+    
+    console.log(`Running actor: ${actorId}`);
+    
+    // تشغيل المهمة وانتظار النهاية
+    let run;
+    try {
+      run = await client.actor(actorId).call(input);
+    } catch (actorError) {
+      console.error('Error running actor:', actorError.message);
+      if (actorError.message.includes('not found')) {
+        throw new Error(`Actor "${actorId}" not found. Please check the Actor ID.`);
+      }
+      throw actorError;
+    }
+    
     console.log(`Actor finished! Run ID: ${run.id}`);
-
-    // 5. جلب النتائج من Dataset
-    console.log("Fetching results...");
+    
+    // جلب النتائج من Dataset
+    console.log('Fetching results...');
     const { items } = await client.dataset(run.defaultDatasetId).listItems();
-
-    // 6. حفظ النتائج في ملف ads.json
-    fs.writeFileSync('ads.json', JSON.stringify(items, null, 2));
-    console.log(`Saved ${items.length} ads to ads.json`);
+    
+    if (!items || items.length === 0) {
+      console.warn('Warning: No items returned from the actor');
+    }
+    
+    // حفظ النتائج في ملف ads.json
+    fs.writeFileSync('ads.json', JSON.stringify(items || [], null, 2));
+    console.log(`Successfully saved ${items.length} ads to ads.json`);
+    
+  } catch (err) {
+    console.error('Error:', err.message);
+    console.error('Stack:', err.stack);
+    process.exit(1);
+  }
 }
 
-main().catch(err => {
-    console.error("Error:", err);
-    process.exit(1);
-});
+main();
