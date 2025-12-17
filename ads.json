@@ -1,4 +1,93 @@
-[{
+[
+  {
+    "page_name": "Chic shop",
+    "product_name": "شريط عازل",
+    "message": "شريط عازل علي الرابطو من المطر والرطوبة والبرد",
+    "operating_days": 104,
+    "repetitions": 3,
+    "category": "أدوات سيارة",
+    "start_date": "2024-08-15",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "Car Accessories Stoore",
+    "product_name": "أغطية مقاعد",
+    "message": "أغطية مقاعد سيارة عالية الجودة",
+    "operating_days": 298,
+    "repetitions": 3,
+    "category": "أدوات سيارة",
+    "start_date": "2024-01-10",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "Timberline",
+    "product_name": "منظم سيارة",
+    "message": "منظم سيارة متعدد الاستخدامات",
+    "operating_days": 178,
+    "repetitions": 1,
+    "category": "أدوات سيارة",
+    "start_date": "2024-06-20",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "Prixmark.ma",
+    "product_name": "كاميرا مراقبة",
+    "message": "كاميرا مراقبة 360 درجة بتقنية ماتريكس",
+    "operating_days": 264,
+    "repetitions": 1,
+    "category": "تكنولوجيا",
+    "start_date": "2024-03-05",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "DHiramama Store",
+    "product_name": "كرسي جيل سيارة",
+    "message": "كرسي جيل ماتريال طبيعي",
+    "operating_days": 273,
+    "repetitions": 1,
+    "category": "أدوات سيارة",
+    "start_date": "2024-02-15",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "Velora.ma",
+    "product_name": "سروال تبـييب",
+    "message": "سروال ضيق بنسبة 40% خصم",
+    "operating_days": 156,
+    "repetitions": 5,
+    "category": "ملابس",
+    "start_date": "2024-09-01",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "MA"
+  },
+  {
+    "page_name": "Luxor Market",
+    "product_name": "فرشاة زيت نخلة",
+    "message": "زيت نخلة طبيعي 100% خام",
+    "operating_days": 89,
+    "repetitions": 7,
+    "category": "برعاية البشرة",
+    "start_date": "2024-10-10",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "DZ"
+  },
+  {
+    "page_name": "Amani Mode",
+    "product_name": "جاكت شتوي",
+    "message": "جاكت راقية ودافئة تجنب البرد",
+    "operating_days": 201,
+    "repetitions": 4,
+    "category": "ملابس",
+    "start_date": "2024-05-22",
+    "adSnapshotUrl": "https://www.facebook.com/ads/library/",
+    "country": "TN"
+  }
+][{
   "ad_archive_id": "854332060863453",
   "collation_count": 1,
   "collation_id": "4320757704819521",
